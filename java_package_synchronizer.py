@@ -35,8 +35,6 @@ class JavaPackageSynchronizer(bpy.types.Operator):
 			row().label(self.error, icon="ERROR")
 			return
 			
-		sc_bdx_tools = context.scene.bdx_tools
-		
 		if ut.java_pack_error():
 			row().label(error_bdx_java_pack, icon="ERROR")
 			row().prop(context.scene.bdx_tools, "java_pack_sync")
