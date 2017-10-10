@@ -309,6 +309,8 @@ class PlaneSectionalizer(bpy.types.Operator):
 		
 		print(prof.timed("Beautifying"))
 		
+		bpy.ops.mesh.select_all()
+		bpy.ops.mesh.remove_doubles()
 		bpy.ops.mesh.quads_convert_to_tris()
 		bpy.ops.mesh.beautify_fill()
 		
@@ -320,6 +322,8 @@ class PlaneSectionalizer(bpy.types.Operator):
 				
 				bpy.ops.mesh.beautify_fill()
 				bpy.ops.mesh.dissolve_limited(angle_limit=context.scene.bdx_tools.plane_sect_decimate_dissolve_angle_limit, delimit={"NORMAL", "MATERIAL", "SEAM", "SHARP", "UV"})
+				bpy.ops.mesh.select_all()
+				bpy.ops.mesh.remove_doubles()
 				bpy.ops.mesh.quads_convert_to_tris()
 				bpy.ops.mesh.beautify_fill()
 				
@@ -328,6 +332,8 @@ class PlaneSectionalizer(bpy.types.Operator):
 				print(prof.timed("Decimating - collapse"))
 				
 				bpy.ops.mesh.decimate(ratio=context.scene.bdx_tools.plane_sect_decimate_collapse_ratio)
+				bpy.ops.mesh.select_all()
+				bpy.ops.mesh.remove_doubles()
 				bpy.ops.mesh.quads_convert_to_tris()
 				bpy.ops.mesh.beautify_fill()
 				
@@ -586,7 +592,11 @@ class PlaneSectionalizer(bpy.types.Operator):
 				print(prof.timed("Exporting json file"))
 				
 				root = ut.assets_root() if ut.project_root() else bpy.path.abspath("//")
-				file_path = os.path.join(root, ob_base.name + ".sctx")
+				folder = "sections"
+				dir = os.path.join(root, folder)
+				if not os.path.exists(dir):
+					os.mkdir(dir)
+				file_path = os.path.join(dir, ob_base.name + ".sctx")
 				with open(file_path, 'w') as f:
 					json.dump(data, f)
 					
